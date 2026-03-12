@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+
+@using System.Security.Claims
+@using TestingPlatform.Constants
+
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — EduPlatform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="wrap df ac jb" style="height:60px">
+            <a class="brand" asp-page="/Home/Index">
+                <div class="bmark">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" /></svg>
+                </div>
+                EduPlatform
+            </a>
+
+            <ul class="nlinks">
+                @switch (User.FindFirstValue(ClaimTypes.Role))
+                {
+                    case AppRoles.Administrator:
+                        {
+                            <li><a class="nlink" asp-page="/Admin/Index">Admin Dashboard</a></li>
+                            <li><a class="nlink" asp-page="/Tests/Index">All Tests</a></li>
+                            <li><a class="nlink" asp-page="/Admin/Users/Index">Users</a></li>
+                            <li><a class="nlink" asp-page="/Admin/Categories/Index">Categories</a></li>
+                        }
+                        break;
+                    case AppRoles.Teacher:
+                        {
+                            <li><a class="nlink" asp-page="/Tests/Index">My Tests</a></li>
+                            <li><a class="nlink" asp-page="/Admin/Categories/Index">Categories</a></li>
+                        }
+                        break;
+                    case AppRoles.Student: { <li><a class="nlink" asp-page="/Student/Dashboard">My Dashboard</a></li> } break;
+                }
+            </ul>
+
+            <ul class="nright">
+                <li>
+                    <button class="tbtn" id="themeToggle">
+                        <svg class="imoon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
+                        <svg class="isun" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+                    </button>
+                </li>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li>
+                        <a class="upill" asp-page="/Users/Profile">
+                            <div class="uav">@User.Identity.Name.Substring(0, 1).ToUpper()</div>
+                            <span>@User.Identity.Name</span>
+                        </a>
+                    </li>
+                    <li>
+                        <form method="post" asp-page="/Users/Logout" class="m0">
+                            <button type="submit" class="btn bodan sm">Sign out</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li><a class="btn bg sm" asp-page="/Users/Login">Log in</a></li>
+                    <li><a class="btn bp sm" asp-page="/Users/Register">Sign up</a></li>
+                }
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alt als a1 m4">
+                <svg class="alt-i" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alt ald a1 m4">
+                <svg class="alt-i" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                <span>@TempData["Error"]</span>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <script>
+        (
+            function()
+            {
+                const s = localStorage.getItem('edu-theme') || 'light';
+                document.documentElement.setAttribute('data-theme', s)
+            }
+        )();
+
+        document.getElementById('themeToggle').addEventListener
+        (
+            'click',
+            () =>
+            {
+                const h = document.documentElement;
+                const n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                
+                h.setAttribute('data-theme', n);
+                localStorage.setItem('edu-theme', n);
+            }
+        );
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

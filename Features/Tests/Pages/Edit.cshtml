@@ -1,0 +1,64 @@
+﻿@page "{id:int}"
+@model TestingPlatform.Features.Tests.Pages.EditModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Edit Draft";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Edit Test Draft</p>
+    <div class="auth-c" style="max-width:600px; margin:0 auto;">
+        <div class="auth-top">
+            <div class="auth-logo">
+                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
+                </svg>
+            </div>
+        
+            <h3 class="m1">Edit Test</h3>
+            <p class="sm-t muted">Modify test settings.</p>
+        </div>
+
+        <div class="auth-body">
+            <form method="post">
+                <input type="hidden" asp-for="Test.Id" />
+
+                <div class="m4">
+                    <label asp-for="Test.Title" class="flbl">Title</label>
+                    <input asp-for="Test.Title" class="fc" required />
+                </div>
+
+                <div class="m4">
+                    <label asp-for="Test.Description" class="flbl">Description</label>
+                    <textarea asp-for="Test.Description" class="fc" rows="3"></textarea>
+                </div>
+
+                <div class="g2c m4" style="gap:12px;">
+                    <div>
+                        <label asp-for="Test.CategoryId" class="flbl">Category</label>
+                        <select asp-for="Test.CategoryId" asp-items="Model.CategoryOptions" class="fsel" required>
+                            <option value="">-- Select Category --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="Test.TimeLimitMinutes" class="flbl">Time Limit (Mins)</label>
+                        <input asp-for="Test.TimeLimitMinutes" class="fc" type="number" min="0" placeholder="0 for unlimited" />
+                    </div>
+                </div>
+
+                <div class="m5">
+                    <div class="df ac g2">
+                        <input class="form-check-input" type="checkbox" role="switch" asp-for="Test.ShowResultsAtEnd" id="showResultsSwitch" />
+                        <label class="form-check-label" for="showResultsSwitch">Show detailed results after submission</label>
+                    </div>
+                </div>
+
+                <div class="df g2 jc">
+                    <a asp-page="Details" asp-route-id="@Model.Test.Id" class="btn bs wf">Cancel</a>
+                    <button type="submit" class="btn bp wf">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿@page
+@model TestingPlatform.Features.Tests.Pages.IndexModel
+@using TestingPlatform.Features.Tests.Models
+@using TestingPlatform.Constants
+@using System.Security.Claims
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Test Library";
+}
+
+<div class="sec df ac jb m5">
+    <h2 style="margin:0">Test Library</h2>
+    <a asp-page="Create" class="btn bp lg">New Draft</a>
+</div>
+
+<div class="sec">
+    <div class="card p5 m4 bg-body-tertiary">
+        <form method="get" class="gauto ac">
+            <div>
+                <input type="text" asp-for="SearchTerm" class="fc" placeholder="Search tests or instructors..." />
+            </div>
+
+            <div>
+                <select asp-for="CategoryId" class="fsel">
+                    <option value="">-- All Categories --</option>
+                    @foreach (var category in Model.Categories) { <option value="@category.Id">@category.Name</option> }
+                </select>
+            </div>
+
+            <div class="df g2">
+                <button type="submit" class="btn bp f1">Search</button>
+                @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.CategoryId.HasValue) { <a asp-page="Index" class="btn bs">Clear</a> }
+            </div>
+        </form>
+    </div>
+
+    <div class="card oh">
+        <div style="overflow-x:auto">
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th style="padding-left:24px">Title</th>
+                        <th>Category</th>
+                        <th>Creator</th>
+                        <th>Status</th>
+                        <th style="text-align:right;padding-right:24px">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Tests.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="tc p5 muted">No tests found matching your criteria.</td>
+                        </tr>
+                    }
+                    @foreach (var test in Model.Tests)
+                    {
+                        bool canEdit = User.IsInRole(AppRoles.Administrator) || test.CreatorId == User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                        <tr>
+                            <td class="w6 ps-4">@test.Title</td>
+                            <td>
+                                <span class="bdg bnt">@test.Category?.Name</span>
+                            </td>
+                            <td class="muted">@test.Creator?.FirstName @test.Creator?.LastName</td>
+                            <td>
+                                @if (test.Status == TestStatus.Published) { <span class="bdg bsuc2">Published</span> }
+                                else { <span class="bdg bwrn2">Draft</span> }
+                            </td>
+                            <td style="text-align:right;padding-right:24px">
+                                <div class="df g2 je">
+                                    @if (canEdit) { <a asp-page="Details" asp-route-id="@test.Id" class="btn bs sm">Manage</a> }
+                                    else { <span class="muted sm-t me-3">Read-Only</span> }
+
+                                    @if (test.Status == TestStatus.Published && canEdit) { <a asp-page="/Sessions/Create" asp-route-testId="@test.Id" class="btn bp sm">Launch</a> }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

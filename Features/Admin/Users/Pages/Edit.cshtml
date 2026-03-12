@@ -1,0 +1,69 @@
+﻿@page "{id}"
+@model TestingPlatform.Features.Admin.Users.Pages.EditModel
+@using TestingPlatform.Constants
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Edit User</p>
+    <div class="auth-c" style="max-width:500px; margin:0 auto;">
+        <div class="auth-top">
+            <div class="auth-logo">
+                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                </svg>
+            </div>
+            <h3 class="m1">Edit User</h3>
+            <p class="sm-t muted">Modify account details and platform access.</p>
+        </div>
+
+        <div class="auth-body">
+            <form method="post">
+                <input type="hidden" asp-for="Input.UserId" />
+                <div asp-validation-summary="ModelOnly" class="dan sm-t m3"></div>
+
+                <div class="m4">
+                    <label asp-for="Input.Role" class="flbl">Platform Role</label>
+                    <select asp-for="Input.Role" class="fsel">
+                        @foreach (var role in new[] { AppRoles.Administrator, AppRoles.Teacher, AppRoles.Student })
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                    <div class="fhint">Changing role alters dashboard access.</div>
+                </div>
+
+                <div class="g2c m4" style="gap:12px;">
+                    <div>
+                        <label asp-for="Input.FirstName" class="flbl">First Name</label>
+                        <input asp-for="Input.FirstName" class="fc" required />
+                        <span asp-validation-for="Input.FirstName" class="dan sm-t"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.LastName" class="flbl">Last Name</label>
+                        <input asp-for="Input.LastName" class="fc" required />
+                        <span asp-validation-for="Input.LastName" class="dan sm-t"></span>
+                    </div>
+                </div>
+
+                <div class="m5">
+                    <label asp-for="Input.Email" class="flbl">Email Address</label>
+                    <input asp-for="Input.Email" class="fc" type="email" required />
+                    <span asp-validation-for="Input.Email" class="dan sm-t"></span>
+                </div>
+
+                <div class="df g2 jc">
+                    <a asp-page="Index" class="btn bs wf">Cancel</a>
+
+                    <button type="submit" class="btn bp wf">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,33 @@
+﻿@page "{testId:int}"
+@model TestingPlatform.Features.Sessions.Pages.CreateModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Launch Test Session";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Launch Session</p>
+    <div style="max-width:500px; margin:0 auto;">
+        <div class="card oh text-center">
+            <div class="auth-top" style="background:var(--gps);">
+                <div class="auth-logo" style="background:var(--gp);">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                    </svg>
+                </div>
+                <h3 class="m1">Launch Live Session</h3>
+            </div>
+
+            <div class="p5">
+                <p class="sm-t muted m4">You are about to generate a PIN code for:</p>
+                <h4 class="w6 m5">"@Model.Test.Title"</h4>
+                <p class="m4">Students will use this 6-digit PIN on their dashboard to join and begin the assessment.</p>
+            
+                <form method="post">
+                    <button type="submit" class="btn bp wf lg">Generate PIN Code</button>
+                    <a asp-page="/Tests/Index" class="btn bs wf mt4">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

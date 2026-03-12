@@ -1,0 +1,101 @@
+﻿@page
+@model TestingPlatform.Features.Student.Pages.DashboardModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Student Dashboard</p>
+
+    <div class="card oh mb-5" style="background:var(--gps); border:1px solid hsla(231,93%,66%,.2);">
+        <div class="p5 text-center">
+            <div class="auth-logo" style="margin:0 auto 16px; background:var(--gp); width:52px; height:52px;">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33" />
+                </svg>
+            </div>
+
+            <h4 class="m1">Join a Live Test</h4>
+            <p class="sm-t muted m4">Enter the 6-digit PIN from your instructor.</p>
+            <form method="post" class="df jc" style="max-width:400px; margin:0 auto;">
+                <input type="text" asp-for="JoinCode" class="fc pin-in" placeholder="@Model.PlaceholderText" maxlength="6" required />
+                <button type="submit" class="btn bp s0" style="padding:0 20px; margin-left:10px;">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </button>
+            </form>
+            
+            <span asp-validation-for="JoinCode" class="dan sm-t mt2 d-block"></span>
+        </div>
+    </div>
+
+    <div class="df ac jb m4" style="margin-top: 30px;">
+        <h4 style="margin:0;">Recent History</h4>
+    </div>
+
+    <div class="card p5 mb-4" style="background:var(--sf2);">
+        <form method="get" class="gauto ac">
+            <div>
+                <input type="text" asp-for="SearchTerm" class="fc" placeholder="Search by test name or instructor..." />
+            </div>
+            
+            <div>
+                <select asp-for="CategoryId" class="fsel">
+                    <option value="">-- All Categories --</option>
+                    @foreach (var cat in Model.Categories) { <option value="@cat.Id">@cat.Name</option> }
+                </select>
+            </div>
+            
+            <div class="df g2">
+                <button type="submit" class="btn bp f1">Search</button>
+                @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.CategoryId.HasValue) { <a asp-page="Dashboard" class="btn bs">Clear</a> }
+            </div>
+        </form>
+    </div>
+
+    <div class="card oh" style="margin-top: 15px;">
+        <div style="overflow-x:auto">
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th style="padding-left:24px">Assessment</th>
+                        <th>Category</th>
+                        <th>Instructor</th>
+                        <th>Date Completed</th>
+                        <th>Score</th>
+                        <th style="text-align:right; padding-right:24px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Attempts.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="tc p5 muted">No test attempts match your criteria.</td>
+                        </tr>
+                    }
+                    @foreach (var attempt in Model.Attempts)
+                    {
+                        <tr>
+                            <td style="padding-left:24px" class="w6">@attempt.TestSession!.Test!.Title</td>
+                            <td>
+                                <span class="bdg bnt">@attempt.TestSession.Test.Category?.Name</span>
+                            </td>
+                            <td class="muted">@attempt.TestSession.Test.Creator?.FirstName @attempt.TestSession.Test.Creator?.LastName</td>
+                            <td class="sm-t muted">@attempt.CompletedAt?.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>
+                                <span class="bdg bnt">
+                                    @attempt.TotalScore / @attempt.MaxPossibleScore
+                                </span>
+                            </td>
+                            <td style="text-align:right; padding-right:24px">
+                                <a asp-page="Result" asp-route-id="@attempt.Id" class="btn bs sm">View Report</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

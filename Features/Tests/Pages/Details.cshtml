@@ -1,0 +1,158 @@
+﻿@page "{id:int}"
+@model TestingPlatform.Features.Tests.Pages.DetailsModel
+@using TestingPlatform.Features.Tests.Models
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Test Details";
+}
+
+<div class="sec" style="display:grid; grid-template-columns:1fr 2fr; gap:24px;">
+    <!-- Sidebar -->
+    <div>
+        <p class="sec-lbl">Test Details</p>
+
+        <div class="cgrd" style="background:var(--sf);">
+            <div class="p5">
+                <div style="background:var(--gps); border:1px solid hsla(231,93%,66%,.2); border-radius:var(--r3); padding:20px; margin-bottom:20px;">
+                    <div class="df ac jb m2">
+                        <h4 style="margin:0">@Model.Test.Title</h4>
+                        <span class="bdg @(Model.Test.Status == TestStatus.Published ? "bsuc2" : "bwrn2")">@Model.Test.Status</span>
+                    </div>
+
+                    <span class="bdg bnt m3">@Model.Test.Category?.Name</span>
+                    <p class="sm-t muted">@Model.Test.Description</p>
+                </div>
+
+                <div style="border-top:1px solid var(--brs); padding-top:16px; margin-bottom:20px;">
+                    <div class="df jb" style="padding:10px 0; border-bottom:1px solid var(--brs);">
+                        <span class="muted">Questions</span><strong>@Model.Test.Questions.Count</strong>
+                    </div>
+
+                    <div class="df jb" style="padding:10px 0;">
+                        <span class="muted">Time Limit</span><strong>@(Model.Test.TimeLimitMinutes == 0 ? "Unlimited" : $"{Model.Test.TimeLimitMinutes} mins")</strong>
+                    </div>
+                </div>
+
+                @if (Model.Test.Status == TestStatus.Draft)
+                {
+                    <a asp-page="Edit" asp-route-id="@Model.Test.Id" class="btn bs wf m2">Edit Settings</a>
+                    @if (Model.Test.Questions.Any())
+                    {
+                        <form method="post" asp-page-handler="Publish">
+                            <button type="submit" class="btn bp wf">Publish Test</button>
+                        </form>
+                    }
+                    else { <div class="alt alw m2">Add questions to publish.</div> }
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="StartSession">
+                        <button type="submit" class="btn bp wf m2">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                            </svg>
+                            Launch New Session
+                        </button>
+                    </form>
+
+                    <form method="post" asp-page-handler="Unpublish">
+                        <button type="submit" class="btn bs wf">Revert to Draft</button>
+                    </form>
+
+                    @if (Model.Test.Sessions.Any(s => s.IsActive))
+                    {
+                        <div class="mt4 p4" style="background:var(--gps); border:1px solid hsla(231,93%,66%,.2); border-radius:var(--r3);">
+                            <p class="xs-t uc lsw muted w7 tc m2">Active Session PINs</p>
+                            <div class="df fw g2 jc">
+                                @foreach (var session in Model.Test.Sessions.Where(session => session.IsActive)) { <span class="bdg bgrd" style="font-size:1rem;">@session.JoinCode</span> }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div style="padding:12px 24px; border-top:1px solid var(--br);">
+                <a asp-page="Delete" asp-route-id="@Model.Test.Id" class="btn bodan wf sm">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                    Delete Test Draft
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions area -->
+    <div>
+        <p class="sec-lbl">Questions</p>
+
+        @if (Model.Test.Status == TestStatus.Draft)
+        {
+            <div class="card p5 mb-5" style="background:var(--sf2);">
+                <h5 class="m3">Add New Question</h5>
+
+                <form method="post" asp-page-handler="AddQuestion">
+                    <div class="m4">
+                        <textarea asp-for="NewQuestion.Text" class="fc" rows="2" placeholder="Enter question text..." required></textarea>
+                    </div>
+
+                    <div class="m4">
+                        <textarea asp-for="NewQuestion.Explanation" class="fc" rows="2" placeholder="Explanation (shown to students in review mode)..."></textarea>
+                    </div>
+
+                    <div class="g2c m4" style="gap:12px;">
+                        @for (int i = 0; i < 4; i++)
+                        {
+                            <div class="df ac g2">
+                                <input class="form-check-input" type="radio" asp-for="NewQuestion.CorrectIndex" value="@i" required />
+                                <input type="text" asp-for="NewQuestion.Options[i]" class="fc" placeholder="Option @(i + 1)" required />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="df je">
+                        <button type="submit" class="btn bp">Save Question</button>
+                    </div>
+                </form>
+            </div>
+        }
+
+        @if (!Model.Test.Questions.Any()) { <div class="tc p5 muted">No questions added yet.</div> }
+        else
+        {
+            int questionNumber = 1;
+            foreach (var question in Model.Test.Questions)
+            {
+                <div class="card p5 mb-3">
+                    <div class="df ac jb m3">
+                        <h5><span class="muted me-2">@questionNumber.</span> @question.Text</h5>
+                        @if (Model.Test.Status == TestStatus.Draft)
+                        {
+                            <form method="post" asp-page-handler="DeleteQuestion" asp-route-questionId="@question.Id">
+                                <button type="submit" class="btn bodan sm">Remove</button>
+                            </form>
+                        }
+                    </div>
+
+                    <div class="df fc- g2">
+                        @foreach (var option in question.AnswerOptions)
+                        {
+                            <div class="ocard @(option.IsCorrect ? "cor" : "")" style="justify-content:space-between;">
+                                <span>@option.Text</span>
+                                @if (option.IsCorrect) { <span class="bdg bsuc2">Correct</span> }
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(question.Explanation))
+                        {
+                            <div class="explanation-container">
+                                <span class="explanation-label">Instructor Explanation:</span>
+                                <span class="explanation-text">@question.Explanation</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+                questionNumber++;
+            }
+        }
+    </div>
+</div>

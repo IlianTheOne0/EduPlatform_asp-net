@@ -1,0 +1,72 @@
+﻿@page
+@model TestingPlatform.Features.Admin.Users.Pages.CreateTeacherModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Add New Teacher";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Register New User</p>
+    <div class="auth-c" style="max-width:500px; margin:0 auto;">
+        <div class="auth-top">
+            <div class="auth-logo">
+                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                </svg>
+            </div>
+
+            <h3 class="m1">Add New User</h3>
+            <p class="sm-t muted">Manually onboard a teacher or student.</p>
+        </div>
+        <div class="auth-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="dan sm-t m3"></div>
+
+                <div class="m4">
+                    <label asp-for="Input.Role" class="flbl">Account Type</label>
+                    <select asp-for="Input.Role" class="fsel">
+                        <option value="Teacher">Teacher</option>
+                        <option value="Student">Student</option>
+                    </select>
+                </div>
+
+                <div class="g2c m4" style="gap:12px;">
+                    <div>
+                        <label asp-for="Input.FirstName" class="flbl">First Name</label>
+                        <input asp-for="Input.FirstName" class="fc" required />
+                        <span asp-validation-for="Input.FirstName" class="dan sm-t"></span>
+                    </div>
+                    
+                    <div>
+                        <label asp-for="Input.LastName" class="flbl">Last Name</label>
+                        <input asp-for="Input.LastName" class="fc" required />
+                        <span asp-validation-for="Input.LastName" class="dan sm-t"></span>
+                    </div>
+                </div>
+
+                <div class="m4">
+                    <label asp-for="Input.Email" class="flbl">Email Address</label>
+                    <input asp-for="Input.Email" class="fc" autocomplete="username" placeholder="name@example.com" required />
+                    <span asp-validation-for="Input.Email" class="dan sm-t"></span>
+                </div>
+
+                <div class="m5">
+                    <label asp-for="Input.Password" class="flbl">Temporary Password</label>
+                    <input asp-for="Input.Password" class="fc" type="password" autocomplete="new-password" placeholder="••••••••" required />
+                    <div class="fhint">Provide a secure temporary password for the user.</div>
+                    <span asp-validation-for="Input.Password" class="dan sm-t"></span>
+                </div>
+
+                <div class="df g2 jc">
+                    <a asp-page="/Admin/Index" class="btn bs wf">Cancel</a>
+                    
+                    <button type="submit" class="btn bp wf">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

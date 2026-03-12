@@ -1,0 +1,62 @@
+﻿@page
+@model TestingPlatform.Features.Users.Pages.ProfileModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="sec">
+    <p class="sec-lbl">My Profile</p>
+    <div class="auth-c" style="max-width:500px; margin:0 auto;">
+        <div class="auth-top">
+            <div class="auth-logo">
+                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+            </div>
+
+            <h3 class="m1">@User.Identity?.Name</h3>
+            <p class="sm-t muted">@Model.Input.Role</p>
+        </div>
+
+        <div class="auth-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="dan sm-t m3"></div>
+
+                <div class="g2c m4" style="gap:12px;">
+                    <div>
+                        <label asp-for="Input.FirstName" class="flbl">First Name</label>
+                        <input asp-for="Input.FirstName" class="fc" />
+                        <span asp-validation-for="Input.FirstName" class="dan sm-t"></span>
+                    </div>
+        
+                    <div>
+                        <label asp-for="Input.LastName" class="flbl">Last Name</label>
+                        <input asp-for="Input.LastName" class="fc" />
+                        <span asp-validation-for="Input.LastName" class="dan sm-t"></span>
+                    </div>
+                </div>
+
+                <div class="m4">
+                    <label asp-for="Input.Email" class="flbl">Email Address</label>
+                    <input asp-for="Input.Email" class="fc" readonly disabled />
+                </div>
+
+                <div class="m5">
+                    <label asp-for="Input.DateOfBirth" class="flbl">Date of Birth</label>
+                    <input asp-for="Input.DateOfBirth" class="fc" type="date" />
+                    <span asp-validation-for="Input.DateOfBirth" class="dan sm-t"></span>
+                </div>
+
+                <div class="df g2 jc">
+                    <a asp-page="/Home/Index" class="btn bs wf">Cancel</a>
+                    <button type="submit" class="btn bp wf">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,55 @@
+﻿@page
+@model TestingPlatform.Features.Admin.Categories.Pages.IndexModel
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Manage Categories";
+}
+
+<div class="sec">
+    <p class="sec-lbl">Manage Categories</p>
+    <div class="df ac jb m4">
+        <h2 style="margin:0">Categories</h2>
+        @if (User.IsInRole("Administrator"))
+        {
+            <a asp-page="Create" class="btn bp sm">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Create New
+            </a>
+        }
+    </div>
+    <div class="card oh">
+        <div style="overflow-x:auto">
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th style="padding-left:24px">Category Name</th>
+                        <th>Associated Tests</th>
+                        <th style="text-align:right; padding-right:24px">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Categories.Any())
+                    {
+                        <tr>
+                            <td colspan="3" class="tc p5 muted">No categories found.</td>
+                        </tr>
+                    }
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <tr>
+                            <td style="padding-left:24px" class="w6">@cat.Name</td>
+                            <td>
+                                <span class="bdg bnt">@cat.Tests.Count Tests</span>
+                            </td>
+                            <td style="text-align:right; padding-right:24px">
+                                @if (User.IsInRole("Administrator")) { <a asp-page="Delete" asp-route-id="@cat.Id" class="btn bodan sm">Delete</a> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
