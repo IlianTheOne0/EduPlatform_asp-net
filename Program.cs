@@ -24,7 +24,29 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var envDbUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+var rawConnectionString = !string.IsNullOrEmpty(connectionString) ? connectionString : envDbUrl;
+
+if (string.IsNullOrWhiteSpace(rawConnectionString)) { throw new InvalidOperationException("Database connection string is missing. Check your Render environment variables."); }
+
+if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out var uri) && (uri.Scheme == "postgres" || uri.Scheme == "postgresql"))
+{
+    var userInfo = uri.UserInfo.Split(':');
+
+    connectionString = $"Host={uri.Host};" +
+                       $"Port={(uri.Port > 0 ? uri.Port : 5432)};" +
+                       $"Username={userInfo[0]};" +
+                       $"Password={userInfo[1]};" +
+                       $"Database={uri.LocalPath.TrimStart('/')};" +
+                       $"Pooling=true;" +
+                       $"SSL Mode=Require;" +
+                       $"Trust Server Certificate=True;";
+}
+else { connectionString = rawConnectionString; }
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
@@ -97,6 +119,10 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    context.Database.Migrate();
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 

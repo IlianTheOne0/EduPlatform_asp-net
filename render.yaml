@@ -1,0 +1,24 @@
+#yaml-language-server: $schema=none
+version: "1"
+
+services:
+  - type: web
+    name: testing-platform-web
+    env: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:80
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: testing-platform-db
+          property: connectionString
+
+databases:
+  - name: testing-platform-db
+    databaseName: testingplatform
+    user: admin
+    plan: free
