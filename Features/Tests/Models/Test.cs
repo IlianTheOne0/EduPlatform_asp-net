@@ -24,4 +24,6 @@ public class Test
 
     public ICollection<Question> Questions { get; set; } = new List<Question>();
     public ICollection<TestSession> Sessions { get; set; } = new List<TestSession>();
+
+    public override string ToString() => $"Test: {Title} | Status: {Status} | Time Limit: {TimeLimitMinutes}m";
 }

@@ -15,6 +15,6 @@ public class LogoutModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         await _signInManager.SignOutAsync();
-        return Redirect("/Home/Index");
+        return Redirect("/Home/Welcome");
     }
 }

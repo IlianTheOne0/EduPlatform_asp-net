@@ -1,0 +1,300 @@
+﻿@page
+@{
+    Layout = "~/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "About Project";
+}
+
+<style>
+    .lang-toggle-container
+    {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+
+    .lang-btn
+    {
+        background: var(--sf2);
+        border: 1px solid var(--br);
+        color: var(--t2);
+        padding: 8px 16px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .lang-btn:first-child
+    {
+        border-radius: 8px 0 0 8px;
+    }
+
+    .lang-btn:last-child
+    {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+    }
+
+    .lang-btn.active
+    {
+        background: var(--ap);
+        color: white;
+        border-color: var(--ap);
+    }
+</style>
+
+<div class="sec">
+    <div class="lang-toggle-container">
+        <button class="lang-btn active" onclick="setLang('en')" id="btn-en">English</button>
+        <button class="lang-btn" onclick="setLang('uk')" id="btn-uk">Українська</button>
+    </div>
+
+    <div id="content-uk" style="display: none;">
+        <p class="sec-lbl jc">Технічний огляд</p>
+
+        <div class="hero m6 a1">
+            <h1 style="font-size:2.4rem;margin-bottom:14px">Архітектура <span class="gt">EduPlatform</span></h1>
+            <p class="muted" style="max-width:680px;margin:0 auto;font-size:1.05rem;line-height:1.75">
+                EduPlatform — це веб-система для онлайн-тестування, побудована на базі ASP.NET Core 8. Проєкт використовує архітектурний підхід Feature-Folders для чіткого модульного розділення коду та логіки.
+            </p>
+        </div>
+
+        <div class="card p6 a3 mb-6">
+            <h4 class="m4">Основний стек технологій</h4>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Рівень</th>
+                        <th>Технологія</th>
+                        <th>Призначення</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="bdg binf">Backend</span></td>
+                        <td class="w6">ASP.NET Core 8</td>
+                        <td class="xs-t">Серверна логіка, маршрутизація, DI</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bsuc2">База даних</span></td>
+                        <td class="w6">PostgreSQL</td>
+                        <td class="xs-t">Реляційне збереження даних</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bp2">ORM</span></td>
+                        <td class="w6">EF Core 8 + Npgsql</td>
+                        <td class="xs-t">Взаємодія з базою, міграції (Code-First)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bwrn2">Frontend</span></td>
+                        <td class="w6">Razor Pages + Vanilla JS</td>
+                        <td class="xs-t">Серверний рендеринг (SSR) та скрипти</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bnt">Безпека</span></td>
+                        <td class="w6">ASP.NET Core Identity</td>
+                        <td class="xs-t">Аутентифікація, ролі та політики</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="g2c m6 mt6">
+            <div class="cglow p6 a1">
+                <div class="df ac g3 m4">
+                    <div class="kico kip" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                        </svg>
+                    </div>
+                    <h3>Структура Feature-Folders</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    Замість класичного розподілу на Model-View-Controller, код системи організовано за функціональними блоками (Features). Усі файли, що стосуються певної сутності (наприклад, управління тестами), зберігаються в одній директорії, що полегшує підтримку та навігацію у проєкті.
+                </p>
+                <div class="df fw g2 mt-4">
+                    <div class="bdg bnt">Модульність</div>
+                    <div class="bdg bnt">Чисті URL</div>
+                </div>
+            </div>
+
+            <div class="cglow p6 a2">
+                <div class="df ac g3 m4">
+                    <div class="kico kis" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3>Фонові процеси та таймери</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    У платформу вбудовано <strong>BackgroundService</strong> (`AttemptTimeoutWorker`). Цей серверний процес виконується у фоні та автоматично завершує спроби тестування, якщо студент перевищив ліміт часу або закрив сторінку.
+                </p>
+            </div>
+        </div>
+
+        <div class="g2c m6">
+            <div class="cglow p6 a1">
+                <div class="df ac g3 m4">
+                    <div class="kico kiw" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                        </svg>
+                    </div>
+                    <h3>Автозбереження відповідей</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    Інтерфейс тестування використовує <strong>Vanilla JavaScript (Fetch API)</strong> для взаємодії з сервером без перезавантаження сторінки. Кожен вибір варіанта відповіді миттєво відправляється на обробник Razor Pages (`OnPostAutoSaveAsync`), забезпечуючи збереження прогресу.
+                </p>
+            </div>
+
+            <div class="cglow p6 a2">
+                <div class="df ac g3 m4">
+                    <div class="kico kii" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                    </div>
+                    <h3>Політики безпеки</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    Доступ до різних частин системи контролюється через Policies (наприклад, `AdminOnly`, `StudentOnly`). Сервер глобально застосовує ці правила до маршрутів під час старту. Захист від CSRF-атак забезпечується автоматичними Antiforgery токенами.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="content-en">
+        <p class="sec-lbl jc">Technical Overview</p>
+
+        <div class="hero m6 a1">
+            <h1 style="font-size:2.4rem;margin-bottom:14px">EduPlatform <span class="gt">Architecture</span></h1>
+            <p class="muted" style="max-width:680px;margin:0 auto;font-size:1.05rem;line-height:1.75">
+                EduPlatform is a web platform for online testing built on ASP.NET Core 8. The project uses a Feature-Folder architectural approach for clear modular separation of code and business logic.
+            </p>
+        </div>
+
+        <div class="card p6 a3 mb-6">
+            <h4 class="m4">Core Technology Stack</h4>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Technology</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="bdg binf">Backend</span></td>
+                        <td class="w6">ASP.NET Core 8</td>
+                        <td class="xs-t">Server logic, routing, DI</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bsuc2">Database</span></td>
+                        <td class="w6">PostgreSQL</td>
+                        <td class="xs-t">Relational data storage</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bp2">ORM</span></td>
+                        <td class="w6">EF Core 8 + Npgsql</td>
+                        <td class="xs-t">Database interaction, Code-First migrations</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bwrn2">Frontend</span></td>
+                        <td class="w6">Razor Pages + Vanilla JS</td>
+                        <td class="xs-t">Server-Side Rendering (SSR) and client scripts</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bdg bnt">Security</span></td>
+                        <td class="w6">ASP.NET Core Identity</td>
+                        <td class="xs-t">Authentication, roles, and policies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="g2c m6 mt6">
+            <div class="cglow p6 a1">
+                <div class="df ac g3 m4">
+                    <div class="kico kip" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                        </svg>
+                    </div>
+                    <h3>Feature-Folder Structure</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    Instead of a traditional Model-View-Controller layout, the codebase is organized into functional modules (Features). All files related to a specific domain (like test management) are kept together, making the application easier to maintain and navigate.
+                </p>
+                <div class="df fw g2 mt-4">
+                    <div class="bdg bnt">Modularity</div>
+                    <div class="bdg bnt">Clean URLs</div>
+                </div>
+            </div>
+
+            <div class="cglow p6 a2">
+                <div class="df ac g3 m4">
+                    <div class="kico kis" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3>Background Workers</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    The platform implements a <strong>BackgroundService</strong> (`AttemptTimeoutWorker`). This server-side process runs in the background to automatically finalize and score test attempts if a student exceeds the time limit or abandons the page.
+                </p>
+            </div>
+        </div>
+
+        <div class="g2c m6">
+            <div class="cglow p6 a1">
+                <div class="df ac g3 m4">
+                    <div class="kico kiw" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                        </svg>
+                    </div>
+                    <h3>Autosave Integration</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    The test-taking UI uses <strong>Vanilla JavaScript (Fetch API)</strong> to communicate with the server seamlessly. Every selected answer is instantly posted to a Razor Page handler (`OnPostAutoSaveAsync`), ensuring no progress is lost.
+                </p>
+            </div>
+
+            <div class="cglow p6 a2">
+                <div class="df ac g3 m4">
+                    <div class="kico kii" style="margin-bottom:0;width:36px;height:36px">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                    </div>
+                    <h3>Security Policies</h3>
+                </div>
+                <p class="muted sm-t m3">
+                    Access control is strictly enforced using authorization policies (e.g., `AdminOnly`, `StudentOnly`). The server applies these rules globally to routes upon startup. Cross-Site Request Forgery (CSRF) protection is handled automatically via Antiforgery tokens.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setLang(lang)
+    {
+        document.getElementById('btn-uk').classList.remove('active');
+        document.getElementById('btn-en').classList.remove('active');
+        document.getElementById('btn-' + lang).classList.add('active');
+
+        if (lang === 'uk')
+        {
+            document.getElementById('content-uk').style.display = 'block';
+            document.getElementById('content-en').style.display = 'none';
+        }
+        else
+        {
+            document.getElementById('content-uk').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+        }
+    }
+</script>

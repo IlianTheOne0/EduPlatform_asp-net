@@ -6,4 +6,6 @@ public class Category
     public string Name { get; set; } = string.Empty;
 
     public ICollection<Test> Tests { get; set; } = new List<Test>();
+
+    public override string ToString() => $"Category: {Name} (ID: {Id})";
 }

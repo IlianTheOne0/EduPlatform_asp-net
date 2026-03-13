@@ -17,13 +17,29 @@ public class LoginRequiredMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         var path = context.Request.Path.Value?.TrimEnd('/').ToLowerInvariant() ?? "";
+
         var isStatic = path.StartsWith("/css") || path.StartsWith("/js") || path.StartsWith("/lib");
-        var isAllowed = path == "" || path == "/home" || path == "/home/index" || path == "/users/login" || path == "/users/register";
+
+        var publicRoutes = new[]
+        {
+            "",
+            "/home",
+            "/home/index",
+            "/users/login",
+            "/users/register",
+            "/home/welcome",
+            "/home/aboutproject"
+        };
+
+        bool isAllowed = publicRoutes.Contains(path);
 
         if (!isStatic && !isAllowed && (!context.User.Identity?.IsAuthenticated ?? true))
         {
-            context.Response.Redirect(_loginPath);
-            return;
+            if (!path.StartsWith("/users/login"))
+            {
+                context.Response.Redirect(_loginPath);
+                return;
+            }
         }
 
         await _next(context);
