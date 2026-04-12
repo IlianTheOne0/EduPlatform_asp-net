@@ -1,1 +1,1 @@
-https://testing-platform-web.onrender.com/
+https://testing-platform-web-xri5.onrender.com
