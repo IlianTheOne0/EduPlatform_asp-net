@@ -5,11 +5,11 @@
     ViewData["Title"] = "Taking Test";
 
     var timeLimit = Model.Attempt.TestSession!.Test!.TimeLimitMinutes;
-    var endTimeUtc = timeLimit > 0 ? Model.Attempt.StartedAt.AddMinutes(timeLimit).ToString("O") : null;
+
+    var endTimeMs = timeLimit > 0 ? ((DateTimeOffset)Model.Attempt.StartedAt.AddMinutes(timeLimit)).ToUnixTimeMilliseconds() : 0;
 
     short questionIndex = 0;
 }
-
 <div class="sec">
     <p class="sec-lbl">@Model.Attempt.TestSession!.Test!.Title</p>
     <div class="cgrd" style="background:var(--sf);">
@@ -74,8 +74,9 @@
         const form = document.getElementById("testForm");
         const attemptId = @Model.Attempt.Id;
         const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
         const timeLimit = @(timeLimit);
-        const endTimeUtc = @(endTimeUtc != null ? $"\"{endTimeUtc}\"" : "null");
+        const endTime = @(endTimeMs);
 
         form.addEventListener
         (
@@ -116,40 +117,32 @@
             }
         );
 
-        if (timeLimit > 0 && endTimeUtc)
+        if (timeLimit > 0 && endTime > 0)
         {
-            const endTime = new Date(endTimeUtc).getTime();
             const timerDisplay = document.getElementById("timerDisplay");
             const testForm = document.getElementById("testForm");
 
-            const timerInterval = setInterval
-            (
-                function()
-                {
-                    const now = new Date().getTime();
-                    const distance = endTime - now;
+            const timerInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
 
-                    if (distance <= 0)
-                    {
-                        clearInterval(timerInterval);
-                        timerDisplay.innerHTML = "00:00";
+                if (distance <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerHTML = "00:00";
 
-                        const radios = testForm.querySelectorAll('input[type="radio"]');
-                        radios.forEach(radio => radio.removeAttribute('required'));
-                        testForm.submit();
-                        
-                        return;
-                    }
+                    const radios = testForm.querySelectorAll('input[type="radio"]');
+                    radios.forEach(radio => radio.removeAttribute('required'));
+                    testForm.submit();
+                    return;
+                }
 
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                const minutes = Math.floor(distance / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                    timerDisplay.innerHTML =
-                        (minutes < 10 ? "0" + minutes : minutes) + ":" +
-                        (seconds < 10 ? "0" + seconds : seconds);
-                },
-                1000
-            );
+                timerDisplay.innerHTML =
+                    (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                    (seconds < 10 ? "0" + seconds : seconds);
+            }, 1000);
         }
     </script>
 }
