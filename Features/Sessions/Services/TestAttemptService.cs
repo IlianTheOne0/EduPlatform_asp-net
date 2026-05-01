@@ -101,6 +101,7 @@ public class TestAttemptService : ITestAttemptService
             .ThenInclude(session => session.Test!)
             .ThenInclude(test => test.Questions)
             .ThenInclude(question => question.AnswerOptions)
+            .Include(attempt => attempt.Answers)
             .FirstOrDefaultAsync(attempt => attempt.Id == attemptId && attempt.UserId == userId);
 
     public async Task<TestAttempt?> GetAttemptResultAsync(int attemptId, string userId) => 

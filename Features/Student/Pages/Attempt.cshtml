@@ -33,6 +33,9 @@
 
                 @foreach (var question in Model.Questions)
                 {
+                    var savedAnswer = Model.Attempt.Answers.FirstOrDefault(a => a.QuestionId == question.Id);
+                    var savedOptionId = savedAnswer?.SelectedOptionId;
+
                     <div class="m5">
                         <div class="df ac jb m3">
                             <h5 class="w5"><span class="muted me-2">@(questionIndex + 1).</span> @question.Text</h5>
@@ -40,12 +43,20 @@
 
                         <div class="df fc- g2">
                             <input type="hidden" name="Answers[@questionIndex].QuestionId" value="@question.Id" />
-                            
+
                             @foreach (var option in question.AnswerOptions)
                             {
+                                bool isChecked = savedOptionId == option.Id;
+
                                 <label class="ocard">
                                     <div class="odot"></div>
-                                    <input class="form-check-input d-none" type="radio" name="Answers[@questionIndex].SelectedOptionId" value="@option.Id" data-question-id="@question.Id" required>
+                                    <input class="form-check-input d-none"
+                                           type="radio"
+                                           name="Answers[@questionIndex].SelectedOptionId"
+                                           value="@option.Id"
+                                           data-question-id="@question.Id"
+                                           @(isChecked ? "checked" : "")
+                                           required>
                                     <span>@option.Text</span>
                                 </label>
                             }
@@ -92,7 +103,7 @@
                     {
                         fetch
                         (
-                            `?handler=AutoSave&id=${attemptId}`,
+                            '?handler=AutoSave',
                             {
                                 method: 'POST',
                                 headers:
